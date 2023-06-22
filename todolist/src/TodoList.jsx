@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
+import './App.css'
+
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
-
+  const [doneTodo, setDoneTodo] = useState([]);
+  const handleDoneTodo = (event) => {
+    console.log(doneTodo);
+    setDoneTodo(prevArray => {
+      const newArray = [...prevArray];
+      newArray[event.target.value] = newArray[event.target.value] ? false : true;
+      return newArray;
+    });
+  }
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -14,6 +24,7 @@ function TodoList() {
       return;
     }
     setTodos([...todos, inputValue]);
+    setDoneTodo([...doneTodo, false]);
     setInputValue('');
   };
 
@@ -32,8 +43,10 @@ function TodoList() {
       </form>
       <ul>
         {todos.map((todo, index) => (
-          <li key={index}>
+          <li className={doneTodo[index] ? "strike" : ""}  key={index}>
+            <input type="checkbox"  onClick={handleDoneTodo} value={index} />
             {todo}{' '}
+  
             <button onClick={() => handleTodoDelete(index)}>Delete</button>
           </li>
         ))}
